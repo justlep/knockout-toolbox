@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+  </head>
+  <body>
+    <h2>This textfield will lose focus in 2 seconds</h2>
+    <input type="text" value="huhu" data-bind="autoFocus: {select:true}, blur: needsBlur">
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koAutoFocusBinding.js';
+      import '../lib/koBlurBinding.js';
+      import '../lib/koTogglableExtender.js';
+      
+      function VM() {
+          this.needsBlur = ko.observable(false).extend({togglable:true});
+      
+          setTimeout(this.needsBlur.toggleOn, 2000);
+      }
+      
+      ko.applyBindings(new VM());
+    </script>
+  </body>
+</html>

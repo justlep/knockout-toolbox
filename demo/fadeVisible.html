@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+  </head>
+  <body>
+    <p>
+      <button data-bind="click: f1enabled.toggle">toggle fade</button>
+      <button data-bind="click: f2enabled.toggle">toggle slide</button>
+      <button data-bind="click: f3enabled.toggle">toggle fade + refade</button>
+      <button data-bind="click: f4enabled.toggle">toggle fade + keep space</button>
+    </p>
+    <ol>
+      <li>
+        <div data-bind="fadeVisible: f1enabled" style="display:none; background:red">fade</div>
+      </li>
+      <li>
+        <div data-bind="fadeVisible: {visibleIf: f2enabled, useSlide: true}" style="display:none; background:orange">slide <br> slide <br> slied</div>
+      </li>
+      <li>
+        <div data-bind="fadeVisible: {visibleIf: f3enabled, refadeAfter: 1000}" style="display:none; background:green">refade</div>
+      </li>
+      <li>
+        <div>(above keepspace)</div>
+        <div data-bind="fadeVisible: {visibleIf: f4enabled, keepSpace: true}" style="background:magenta">keep space</div>
+        <div>(below keepspace)</div>
+      </li>
+    </ol>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koFadeVisibleBinding.js';
+      import '../lib/koTogglableExtender.js';
+      
+      function VM() {
+          this.f1enabled = ko.observable(0).extend({togglable: true});
+          this.f2enabled = ko.observable(0).extend({togglable: true});
+          this.f3enabled = ko.observable(0).extend({togglable: true});
+          this.f4enabled = ko.observable(1).extend({togglable: true});
+      }
+      
+      ko.applyBindings(new VM());
+    </script>
+  </body>
+</html>

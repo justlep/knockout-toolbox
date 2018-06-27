@@ -1,0 +1,23 @@
+{
+  "name": "knockout-toolbox",
+  "version": "0.0.1",
+  "description": "Some handy bindings, extenders, components for KnockoutJS",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --max-warnings 5 lib/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justlep/knockout-toolbox.git"
+  },
+  "author": "Lennart Pegel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justlep/knockout-toolbox/issues"
+  },
+  "homepage": "https://github.com/justlep/knockout-toolbox#readme",
+  "devDependencies": {
+    "eslint": "~4.16.0",
+    "eslint-plugin-log-filenames": "^1.0.1"
+  }
+}

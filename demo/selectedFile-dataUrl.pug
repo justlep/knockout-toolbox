@@ -1,0 +1,19 @@
+extends default
+
+block content
+    h2 Select a file
+    input(type="file", accept="image/*", data-bind="selectedFile: imageFile")
+    div(data-bind="with: imageFile.fileDataUrl")
+        p Preview:
+        img(data-bind="attr: {src: $data}")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koSelectedFileBinding.js';
+        import '../lib/koFileDataUrlExtender.js';
+
+        function VM() {
+            this.imageFile = ko.observable().extend({fileDataUrl: true});
+        }
+
+        ko.applyBindings(new VM());

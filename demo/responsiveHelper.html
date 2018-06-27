@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+  </head>
+  <body>
+    <h2>Current window size:<b data-bind="text: winWidth"></b></h2>
+    <h2>visibleIfWindowSize</h2>
+    <div style="background:red" data-bind="visibleIfWindowSize: {min: 500}">min. 500</div>
+    <div style="background:yellow" data-bind="visibleIfWindowSize: {max: 500}">max. 500</div>
+    <div style="background:orange" data-bind="visibleIfWindowSize: {min: 400, max: 600}">400-600</div>
+    <h2>ifWindowSize</h2>
+    <div style="background:red" data-bind="ifWindowSize: {min: 500}">min. 500</div>
+    <div style="background:yellow" data-bind="ifWindowSize: {max: 500}">max. 500</div>
+    <div style="background:orange" data-bind="ifWindowSize: {min: 400, max: 600}">400-600</div>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import responsiveHelper from '../lib/koResponsiveHelper.js';
+      
+      ko.applyBindings({
+          winWidth: responsiveHelper.currentWidthObservable
+      });
+    </script>
+  </body>
+</html>

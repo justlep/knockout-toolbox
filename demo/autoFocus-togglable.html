@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+  </head>
+  <body>
+    <div>
+      <button data-bind="click: f1enabled.toggle">toggle form 1</button>
+      <button data-bind="click: f2enabled.toggle">toggle form 2</button>
+    </div>
+    <div data-bind="if: f1enabled">
+      <input type="text">
+      <label>This one should be focused:
+        <input type="text" value="huhu" data-bind="autoFocus: true">
+      </label>
+      <input type="text">
+    </div>
+    <div data-bind="if: f2enabled">
+      <input type="text">
+      <label>This one should be focused <b>and selected</b>:
+        <input type="text" value="huhu" data-bind="autoFocus: {select: true}">
+      </label>
+      <input type="text">
+    </div>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koAutoFocusBinding.js';
+      import '../lib/koTogglableExtender.js';
+      
+      function VM() {
+          this.f1enabled = ko.observable(0).extend({togglable: true});
+          this.f2enabled = ko.observable(0).extend({togglable: true});
+      }
+      
+      ko.applyBindings(new VM());
+    </script>
+  </body>
+</html>

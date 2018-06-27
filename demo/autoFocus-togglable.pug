@@ -1,0 +1,30 @@
+extends default
+
+block content
+    div
+        button(data-bind="click: f1enabled.toggle") toggle form 1
+        button(data-bind="click: f2enabled.toggle") toggle form 2
+
+    div(data-bind="if: f1enabled")
+        input(type="text")
+        label This one should be focused:
+            input(type="text", value="huhu", data-bind="autoFocus: true")
+        input(type="text")
+
+    div(data-bind="if: f2enabled")
+        input(type="text")
+        label This one should be focused <b>and selected</b>:
+            input(type="text", value="huhu", data-bind="autoFocus: {select: true}")
+        input(type="text")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koAutoFocusBinding.js';
+        import '../lib/koTogglableExtender.js';
+
+        function VM() {
+            this.f1enabled = ko.observable(0).extend({togglable: true});
+            this.f2enabled = ko.observable(0).extend({togglable: true});
+        }
+
+        ko.applyBindings(new VM());

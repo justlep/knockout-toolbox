@@ -1,0 +1,19 @@
+extends default
+
+block content
+    h2 This textfield will lose focus in 2 seconds
+    input(type="text", value="huhu", data-bind="autoFocus: {select:true}, blur: needsBlur")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koAutoFocusBinding.js';
+        import '../lib/koBlurBinding.js';
+        import '../lib/koTogglableExtender.js';
+
+        function VM() {
+            this.needsBlur = ko.observable(false).extend({togglable:true});
+
+            setTimeout(this.needsBlur.toggleOn, 2000);
+        }
+
+        ko.applyBindings(new VM());

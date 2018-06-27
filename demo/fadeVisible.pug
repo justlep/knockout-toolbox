@@ -1,0 +1,31 @@
+extends default
+
+block content
+    p
+        button(data-bind="click: f1enabled.toggle") toggle fade
+        button(data-bind="click: f2enabled.toggle") toggle slide
+        button(data-bind="click: f3enabled.toggle") toggle fade + refade
+        button(data-bind="click: f4enabled.toggle") toggle fade + keep space
+
+    ol
+        li: div(data-bind="fadeVisible: f1enabled", style="display:none; background:red") fade
+        li: div(data-bind="fadeVisible: {visibleIf: f2enabled, useSlide: true}", style="display:none; background:orange") slide <br> slide <br> slied
+        li: div(data-bind="fadeVisible: {visibleIf: f3enabled, refadeAfter: 1000}", style="display:none; background:green") refade
+        li
+            div (above keepspace)
+            div(data-bind="fadeVisible: {visibleIf: f4enabled, keepSpace: true}", style="background:magenta") keep space
+            div (below keepspace)
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koFadeVisibleBinding.js';
+        import '../lib/koTogglableExtender.js';
+
+        function VM() {
+            this.f1enabled = ko.observable(0).extend({togglable: true});
+            this.f2enabled = ko.observable(0).extend({togglable: true});
+            this.f3enabled = ko.observable(0).extend({togglable: true});
+            this.f4enabled = ko.observable(1).extend({togglable: true});
+        }
+
+        ko.applyBindings(new VM());

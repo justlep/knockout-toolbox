@@ -1,0 +1,25 @@
+extends default
+
+block content
+    h2 Current window size:
+        b(data-bind="text: winWidth")
+
+    h2 visibleIfWindowSize
+
+    div(style="background:red", data-bind="visibleIfWindowSize: {min: 500}") min. 500
+    div(style="background:yellow", data-bind="visibleIfWindowSize: {max: 500}") max. 500
+    div(style="background:orange", data-bind="visibleIfWindowSize: {min: 400, max: 600}") 400-600
+
+    h2 ifWindowSize
+
+    div(style="background:red", data-bind="ifWindowSize: {min: 500}") min. 500
+    div(style="background:yellow", data-bind="ifWindowSize: {max: 500}") max. 500
+    div(style="background:orange", data-bind="ifWindowSize: {min: 400, max: 600}") 400-600
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import responsiveHelper from '../lib/koResponsiveHelper.js';
+
+        ko.applyBindings({
+            winWidth: responsiveHelper.currentWidthObservable
+        });

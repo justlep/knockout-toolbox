@@ -1,0 +1,20 @@
+extends default
+
+block content
+    h2 Select a file
+    input(type="file", accept="text/*", data-bind="selectedFile: myFile")
+
+    div(data-bind="with: myFile.fileText")
+        p File content:
+        textarea(data-bind="value: $data", rows=20, cols=80)
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koSelectedFileBinding.js';
+        import '../lib/koFileTextExtender.js';
+
+        function VM() {
+            this.myFile = ko.observable().extend({fileText: true});
+        }
+
+        ko.applyBindings(new VM());
