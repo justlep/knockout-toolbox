@@ -4,7 +4,8 @@
   "description": "Some handy bindings, extenders, components for KnockoutJS",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --max-warnings 5 lib/**/*.js"
+    "lint": "eslint --max-warnings 5 lib/**/*.js",
+    "serve": "http-server -p 8888 -c -1 -i -d -o"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/justlep/knockout-toolbox#readme",
   "devDependencies": {
     "eslint": "~4.16.0",
-    "eslint-plugin-log-filenames": "^1.0.1"
+    "eslint-plugin-log-filenames": "~1.0.1",
+    "http-server": "~0.11.1"
   }
 }
