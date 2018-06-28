@@ -1,0 +1,18 @@
+extends default
+
+block content
+    div: button(data-bind="click: isVisible.toggle") Toggle block
+
+    div(data-bind="if: isVisible")
+        div(style="height: 100vh; overflow:hidden; border: 2px solid green; background: #eee")
+        div(style="padding: 30px; text-align: center; border: 2px solid red", data-bind="scrollIntoView: true") This should be visible in the view now
+        div(style="height: 100vh; overflow:hidden; border: 2px solid green; background: #eee")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koScrollIntoViewBinding.js';
+        import '../lib/koTogglableExtender.js';
+
+        ko.applyBindings({
+            isVisible: ko.observable(false).extend({togglable: true})
+        });

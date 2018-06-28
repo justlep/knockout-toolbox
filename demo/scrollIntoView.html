@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+      dd {font-weight:bold}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+  </head>
+  <body>
+    <div>
+      <button data-bind="click: isVisible.toggle">Toggle block</button>
+    </div>
+    <div data-bind="if: isVisible">
+      <div style="height: 100vh; overflow:hidden; border: 2px solid green; background: #eee"></div>
+      <div style="padding: 30px; text-align: center; border: 2px solid red" data-bind="scrollIntoView: true">This should be visible in the view now</div>
+      <div style="height: 100vh; overflow:hidden; border: 2px solid green; background: #eee"></div>
+    </div>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koScrollIntoViewBinding.js';
+      import '../lib/koTogglableExtender.js';
+      
+      ko.applyBindings({
+          isVisible: ko.observable(false).extend({togglable: true})
+      });
+    </script>
+  </body>
+</html>
