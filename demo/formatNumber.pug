@@ -1,0 +1,48 @@
+extends default
+
+block append head
+    style(type="text/css").
+        li b {margin-left: 10px}
+
+block content
+
+    h3 Formatted numbers
+
+    ul
+        li default:
+            b(data-bind="formatNumber: someNumber")
+        li two digits:
+            b(data-bind="formatNumber: {value: someNumber, decimals: 2}")
+        li as currency
+            b(data-bind="formatNumber: {value: someNumber, asCurrency: true}")
+        li in EUR (appended):
+            b(data-bind="formatNumber: {value: someNumber, asCurrency: true, appendUnit: 'EUR'}")
+        li in EUR (prepended):
+            b(data-bind="formatNumber: {value: someNumber, asCurrency: true, prependUnit: 'EUR'}")
+        li fallback due to invalid number:
+            b(data-bind="formatNumber: {value: invalidNumber, fallback: '---'}")
+
+    p Toggle digit/thousand separators:
+        button(data-bind="click: isDefaultFormat.toggle, text: isDefaultFormat() ? 'default' : 'alternative'")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koFormatNumberBinding.js';
+        import '../lib/koTogglableExtender.js';
+
+        let vm = {
+            someNumber: ko.observable(Math.random() * 10000000),
+            invalidNumber: NaN,
+            isDefaultFormat: ko.observable(true).extend({togglable: true})
+        };
+
+        vm.isDefaultFormat.subscribe(useDefault => {
+            let digitSep = useDefault ? ',' : '.',
+                thousandSep = useDefault ? '.' : ',';
+
+            ko.bindingHandlers.formatNumber.setDefaults(0, thousandSep, digitSep);
+        })
+
+        setInterval(() => vm.someNumber(Math.random() * 10000000), 500);
+
+        ko.applyBindings(vm);
