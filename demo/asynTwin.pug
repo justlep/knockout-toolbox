@@ -1,0 +1,45 @@
+extends default
+
+block append head
+    script(src="../external/knockout-fast-foreach.min.js")
+    style(type="text/css")
+
+
+block content
+
+    table(border=1)
+        thead: tr
+            th: button(data-bind="click: renderClassic") Render using original observableArray
+            th: button(data-bind="click: renderAsyncTwin") Render using asyncTwin
+        tbody: tr
+            td(colspan=2, data-bind="if: useAsyncTwin() !== null")
+                ul(data-bind="fastForEach: useAsyncTwin() ? numbers.asyncTwin : numbers")
+                    li(data-bind="text: $data")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koObservableArrayGetAsyncTwin.js';
+
+        function VM() {
+            let _numbers = [];
+            for (let i = 0; i < 10000; i++) {
+                _numbers.push(i);
+            }
+
+            this.numbers = ko.observableArray().extend({asyncTwin: {chunkSize: 100, chunkDelay: 10}});
+            this.useAsyncTwin = ko.observable(null);
+
+            this._startRender = (async) => {
+                this.useAsyncTwin(null);
+                this.numbers([]);
+                setTimeout(() => {
+                    this.useAsyncTwin(async);
+                    this.numbers(_numbers);
+                }, 0);
+            };
+
+            this.renderClassic = () => this._startRender(false);
+            this.renderAsyncTwin = () => this._startRender(true);
+        }
+
+        ko.applyBindings(new VM());
