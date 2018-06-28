@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+      dd {font-weight:bold}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+  </head>
+  <body>
+    <input type="hidden" value="prefilled hidden text 1530195638319" data-bind="importValueTo: textFromHidden">
+    <p>
+      Demonstrates the `importValueTo` binding, useful when certain form values are rendered server-side
+      and somehow need to be incorporated into the KO viewmodel
+      
+    </p>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>initial</th>
+          <th>values from view model</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>myText (imported via `importValueTo` binding):
+            <input type="text" value="huhu 1530195638319" data-bind="importValueTo: myText, textInput: myText">
+          </td>
+          <td><b data-bind="text: myText"></b></td>
+        </tr>
+        <tr>
+          <td>textFromHidden (imported via `importValueTo` binding):
+            <input type="text" data-bind="textInput: textFromHidden">
+          </td>
+          <td><b data-bind="text: textFromHidden"></b></td>
+        </tr>
+        <tr>
+          <td>myBoolean (imported via `importCheckedStatusTo` binding)
+            <label>
+              <input type="checkbox" data-bind="importCheckedStatusTo: myBoolean, checked: myBoolean" checked>
+            </label>
+          </td>
+          <td><b data-bind="text: myBoolean"></b></td>
+        </tr>
+        <tr>
+          <td>
+            <p data-bind="importElementTo: useParagraph">This is some server-side rendered text.</p>
+          </td>
+          <td><b data-bind="text: textFromParagraph"></b></td>
+        </tr>
+      </tbody>
+    </table>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koImportBindings.js';
+      
+      let vm = {
+          myText: ko.observable(),
+          textFromHidden: ko.observable(),
+          myBoolean: ko.observable(),
+          textFromParagraph: ko.observable(),
+          useParagraph: (element) => vm.textFromParagraph(element.textContent)
+      }
+      
+      ko.applyBindings(vm);
+    </script>
+  </body>
+</html>

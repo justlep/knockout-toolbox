@@ -1,0 +1,48 @@
+extends default
+
+block content
+    - const RANDOM_VAL = 'huhu ' + Date.now();
+    - const RANDOM_VAL2 = 'prefilled hidden text ' + Date.now();
+
+    input(type="hidden", value=RANDOM_VAL2, data-bind="importValueTo: textFromHidden")
+
+    p.
+        Demonstrates the `importValueTo` binding, useful when certain form values are rendered server-side
+        and somehow need to be incorporated into the KO viewmodel
+
+    table(border=1)
+        thead: tr
+            th initial
+            th values from view model
+        tbody
+            tr
+                td myText (imported via `importValueTo` binding):
+                    input(type="text", value=RANDOM_VAL, data-bind="importValueTo: myText, textInput: myText")
+                td: b(data-bind="text: myText")
+            tr
+                td textFromHidden (imported via `importValueTo` binding):
+                    input(type="text", data-bind="textInput: textFromHidden")
+                td: b(data-bind="text: textFromHidden")
+            tr
+                td myBoolean (imported via `importCheckedStatusTo` binding)
+                    label
+                        input(type="checkbox", data-bind="importCheckedStatusTo: myBoolean, checked: myBoolean", checked=true)
+                td: b(data-bind="text: myBoolean")
+            tr
+                td
+                    p(data-bind="importElementTo: useParagraph") This is some server-side rendered text.
+                td: b(data-bind="text: textFromParagraph")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koImportBindings.js';
+
+        let vm = {
+            myText: ko.observable(),
+            textFromHidden: ko.observable(),
+            myBoolean: ko.observable(),
+            textFromParagraph: ko.observable(),
+            useParagraph: (element) => vm.textFromParagraph(element.textContent)
+        }
+
+        ko.applyBindings(vm);
