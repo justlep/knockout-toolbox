@@ -1,7 +1,7 @@
 const fs = require('fs'),
     path = require('path'),
     pug = require('pug'),
-    README_PATH = path.resolve(__dirname, '../README.md'),
+    README_PATH = path.resolve(__dirname, '../docs/README.md'),
     START_COMMENT = '<!-- autoggenerated file list *** DO NOT EDIT *** -->',
     END_COMMENT = '<!-- /autoggenerated file list *** DO NOT EDIT *** -->',
     README_CONTENT = fs.readFileSync(README_PATH).toString();
@@ -17,8 +17,8 @@ if (!README_CONTENT.includes(END_COMMENT)) {
 // generate .html files from .pug files...
 
 
-fs.readdirSync(path.resolve(__dirname, '../demo')).filter(f => f.endsWith('.pug') && !f.startsWith('.')).forEach(f => {
-    let pugPath = path.join(__dirname, '../demo', f),
+fs.readdirSync(path.resolve(__dirname, '../docs')).filter(f => f.endsWith('.pug') && !f.startsWith('.')).forEach(f => {
+    let pugPath = path.join(__dirname, '../docs', f),
         htmlPath = pugPath.replace(/\.pug$/, '.html'),
         html = pug.renderFile(pugPath, {pretty: true}); // synchronous according to https://pugjs.org/api/reference.html
 
@@ -28,11 +28,10 @@ fs.readdirSync(path.resolve(__dirname, '../demo')).filter(f => f.endsWith('.pug'
 
 // update README.md with html file links..
 
-let mdLinks = fs.readdirSync(path.resolve(__dirname, '../demo')).filter(f => f.endsWith('.html')).sort().map(f => {
-        let linkText = f.replace(/\.html$/, '').replace(/-/g, ', '),
-            linkHref = `./demo/${f}`;
+let mdLinks = fs.readdirSync(path.resolve(__dirname, '../docs')).filter(f => f.endsWith('.html')).sort().map(f => {
+        let linkText = f.replace(/\.html$/, '').replace(/-/g, ', ');
 
-        return `* [${linkText}](${linkHref})`;
+        return `* [${linkText}](${f})`;
     }),
     newReadmeContent =
         README_CONTENT.substr(0, README_CONTENT.indexOf(START_COMMENT) + START_COMMENT.length) + '\n\n' +
