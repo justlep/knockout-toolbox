@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+      dd {font-weight:bold}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+    <script src="../external/moment.js"></script>
+    <script src="../external/moment-timezone-with-data.js"></script>
+  </head>
+  <body>
+    <dl>
+      <dt>Today (Berlin):</dt>
+      <dd data-bind="formatDate: {date: now, asBerlinTime: true}"></dd>
+      <dt>Now (Berlin), date & time:</dt>
+      <dd data-bind="formatDate: {date: now, asBerlinTime: true, withTime: true}"></dd>
+      <dt>Now (Berlin), date (German format):</dt>
+      <dd data-bind="formatDate: {date: now, asBerlinTime: true, format: 'DD.MM.YYYY'}"></dd>
+      <dt>Now (Berlin), date & time (German format):</dt>
+      <dd data-bind="formatDate: {date: now, asBerlinTime: true, withTime: true, format: 'DD.MM.YYYY - H:mm:ss'}"></dd>
+      <dt>Today (London):</dt>
+      <dd data-bind="formatDate: {date: now, asLondonTime: true}"></dd>
+      <dt>Now (London), date & time:</dt>
+      <dd data-bind="formatDate: {date: now, asLondonTime: true, withTime: true}"></dd>
+      <dt>Today (custom format):</dt>
+      <dd data-bind="formatDate: {date: now, format: 'dddd, MMMM Do YYYY, h:mm:ss a'}">
+        <!-- all custom formatting options see -> https://momentjs.com/docs/#/displaying/-->
+      </dd>
+    </dl>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koFormatDateBinding.js';
+      
+      let vm = {
+          now: ko.observable(Date.now())
+      };
+      
+      setInterval(() => vm.now(Date.now()), 1000);
+      
+      ko.applyBindings(vm);
+    </script>
+  </body>
+</html>

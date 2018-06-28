@@ -1,0 +1,39 @@
+extends default
+
+block append head
+    script(src="../external/moment.js")
+    script(src="../external/moment-timezone-with-data.js")
+
+block content
+
+    dl
+        dt Today (Berlin):
+        dd(data-bind="formatDate: {date: now, asBerlinTime: true}")
+        dt Now (Berlin), date & time:
+        dd(data-bind="formatDate: {date: now, asBerlinTime: true, withTime: true}")
+        dt Now (Berlin), date (German format):
+        dd(data-bind="formatDate: {date: now, asBerlinTime: true, format: 'DD.MM.YYYY'}")
+        dt Now (Berlin), date & time (German format):
+        dd(data-bind="formatDate: {date: now, asBerlinTime: true, withTime: true, format: 'DD.MM.YYYY - H:mm:ss'}")
+
+        dt Today (London):
+        dd(data-bind="formatDate: {date: now, asLondonTime: true}")
+        dt Now (London), date & time:
+        dd(data-bind="formatDate: {date: now, asLondonTime: true, withTime: true}")
+
+        dt Today (custom format):
+        dd(data-bind="formatDate: {date: now, format: 'dddd, MMMM Do YYYY, h:mm:ss a'}")
+            // all custom formatting options see -> https://momentjs.com/docs/#/displaying/
+
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koFormatDateBinding.js';
+
+        let vm = {
+            now: ko.observable(Date.now())
+        };
+
+        setInterval(() => vm.now(Date.now()), 1000);
+
+        ko.applyBindings(vm);
