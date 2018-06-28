@@ -1,0 +1,18 @@
+extends default
+
+block append head
+    style(type="text/css").
+        pre {background: yellow; border: 1px solid red; display: inline-block;}
+
+block content
+    input(type="text", data-bind="textInput: myText")
+    div Trimmed: &nbsp;
+        pre(data-bind="text: myText.trimmed()")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koTrimmableExtender.js';
+
+        ko.applyBindings({
+            myText: ko.observable('       huhu   und so   ').extend({trimmable: true})
+        });
