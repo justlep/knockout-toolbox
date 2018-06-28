@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+    <style type="text/css">
+      li {color:green}
+      .dropLabel {display:block; padding: 50px; border: 2px dashed yellow; background: #eee}
+      .dropLabel--hover {border: 2px solid green}
+      
+    </style>
+  </head>
+  <body>
+    <h2>Drop file(s) here</h2>
+    <label class="dropLabel" data-bind="dropFile: {target: addFiles, dragOverClass: 'dropLabel--hover'}">
+      <input type="file" data-bind="dropFile: {target: addFiles, multiple: true}">
+    </label><br>
+    <form>
+      <h2>Drop file(s) here...</h2>
+      <h3>...and the form will be reset afterwards (i.e. file input empty again)</h3>
+      <label class="dropLabel" data-bind="dropFile: {target: addFiles, dragOverClass: 'dropLabel--hover', resetFormAfterAdd: true}">
+        <input type="file" data-bind="dropFile: {target: addFiles, multiple: true, resetFormAfterAdd: true}">
+      </label>
+    </form><br>
+    <hr>
+    <h3>Recently dropped files:</h3>
+    <ol data-bind="foreach: recentFilenames">
+      <li data-bind="text: $data"></li>
+    </ol>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koDropFileBinding.js';
+      
+      function VM() {
+          this.recentFilenames = ko.observableArray();
+      
+          this.addFiles = (fileList) => {
+              for (let file of fileList || []) {
+                  this.recentFilenames.push(file.name + ' ......... '+ file.size +' bytes');
+              }
+          };
+      }
+      
+      ko.applyBindings(new VM());
+    </script>
+  </body>
+</html>

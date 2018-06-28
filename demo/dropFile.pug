@@ -1,0 +1,42 @@
+extends default
+
+block append head
+    style(type="text/css").
+        li {color:green}
+        .dropLabel {display:block; padding: 50px; border: 2px dashed yellow; background: #eee}
+        .dropLabel--hover {border: 2px solid green}
+
+block content
+    h2 Drop file(s) here
+    label.dropLabel(data-bind="dropFile: {target: addFiles, dragOverClass: 'dropLabel--hover'}")
+        input(type="file", data-bind="dropFile: {target: addFiles, multiple: true}")
+
+    br
+
+    form
+        h2 Drop file(s) here...
+        h3 ...and the form will be reset afterwards (i.e. file input empty again)
+        label.dropLabel(data-bind="dropFile: {target: addFiles, dragOverClass: 'dropLabel--hover', resetFormAfterAdd: true}")
+            input(type="file", data-bind="dropFile: {target: addFiles, multiple: true, resetFormAfterAdd: true}")
+
+    br
+    hr
+
+    h3 Recently dropped files:
+    ol(data-bind="foreach: recentFilenames"): li(data-bind="text: $data")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koDropFileBinding.js';
+
+        function VM() {
+            this.recentFilenames = ko.observableArray();
+
+            this.addFiles = (fileList) => {
+                for (let file of fileList || []) {
+                    this.recentFilenames.push(file.name + ' ......... '+ file.size +' bytes');
+                }
+            };
+        }
+
+        ko.applyBindings(new VM());
