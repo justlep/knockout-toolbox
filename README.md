@@ -4,14 +4,11 @@ Some handy bindings, extenders, components for KnockoutJS.
 
 Written as ES6 modules, no transpile needed for modern browsers.  
 
-## Documentation
+## Demo & Documentation
 
-All within the sources. See [lib/](./lib)
+Find [demos here](https://justlep.github.io/knockout-toolbox/).
 
-## Demo
-
-[See here](https://justlep.github.io/knockout-toolbox/)
-
+Documentation is all within the sources. See [lib/](./lib)
 
 ---
 
