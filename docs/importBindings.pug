@@ -1,8 +1,8 @@
 extends .default
 
 block content
-    - const RANDOM_VAL = 'huhu ' + Date.now();
-    - const RANDOM_VAL2 = 'prefilled hidden text ' + Date.now();
+    - const RANDOM_VAL = 'huhu abc';
+    - const RANDOM_VAL2 = 'prefilled hidden text 1234567890';
 
     input(type="hidden", value=RANDOM_VAL2, data-bind="importValueTo: textFromHidden")
 

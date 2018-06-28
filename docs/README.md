@@ -1,6 +1,4 @@
 
-# knockout-toolbox
-
 ## Demos
 
 <!-- autoggenerated file list *** DO NOT EDIT *** -->
