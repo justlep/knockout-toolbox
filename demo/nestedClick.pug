@@ -1,0 +1,66 @@
+extends default
+
+block append head
+    script(src="../external/knockout-fast-foreach.min.js")
+    style(type="text/css")
+
+
+block content
+
+    table(border=1)
+        thead: tr
+            th: button(data-bind="click: renderClassic") Render using per-LI click binding
+            th: button(data-bind="click: renderWithNestedClick") Render using renderWithNestedClick-binding on UL
+        tbody: tr
+            td(data-bind="if: numbersClassic().length")
+                ul(data-bind="fastForEach: numbersClassic")
+                    li(data-bind="click: $parent.clickMe")
+                        <!-- ko text: $data --><!-- /ko -->
+                        <!-- ko if: ($index() === $root.LAST_INDEX) && $root.endRender() -->last<!-- /ko -->
+            td(data-bind="if: numbersWithNestedClick().length")
+                ul(data-bind="fastForEach: numbersWithNestedClick, nestedClick: {xxx: clickMe}")
+                    li.xxx
+                        <!-- ko text: $data --><!-- /ko -->
+                        <!-- ko if: ($index() === $root.LAST_INDEX) && $root.endRender() -->last<!-- /ko -->
+
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koNestedClickBinding.js';
+
+        function VM() {
+            this.LAST_INDEX = 9999;
+
+            let _numbers = [],
+                _startTime;
+
+            for (let i=0; i<=this.LAST_INDEX; i++) {
+                _numbers.push(i);
+            }
+
+            this.numbersClassic = ko.observableArray();
+            this.numbersWithNestedClick = ko.observableArray();
+
+            this._prepareRender = () => {
+                this.numbersClassic([]);
+                _startTime = Date.now();
+            }
+
+            this.renderClassic = () => {
+                this._prepareRender();
+                this.numbersClassic(_numbers);
+            }
+
+            this.renderWithNestedClick = () => {
+                this._prepareRender();
+                this.numbersWithNestedClick(_numbers);
+            }
+
+            this.clickMe = (val) => alert(val);
+
+            this.endRender = () => {
+                alert('Render finished after ' + (Date.now() - _startTime) + ' millis');
+            }
+        }
+
+        ko.applyBindings(new VM());

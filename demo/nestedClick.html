@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+      dd {font-weight:bold}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+    <script src="../external/knockout-fast-foreach.min.js"></script>
+    <style type="text/css"></style>
+  </head>
+  <body>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>
+            <button data-bind="click: renderClassic">Render using per-LI click binding</button>
+          </th>
+          <th>
+            <button data-bind="click: renderWithNestedClick">Render using renderWithNestedClick-binding on UL</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-bind="if: numbersClassic().length">
+            <ul data-bind="fastForEach: numbersClassic">
+              <li data-bind="click: $parent.clickMe"><!-- ko text: $data --><!-- /ko -->
+<!-- ko if: ($index() === $root.LAST_INDEX) && $root.endRender() -->last<!-- /ko -->
+              </li>
+            </ul>
+          </td>
+          <td data-bind="if: numbersWithNestedClick().length">
+            <ul data-bind="fastForEach: numbersWithNestedClick, nestedClick: {xxx: clickMe}">
+              <li class="xxx"><!-- ko text: $data --><!-- /ko -->
+<!-- ko if: ($index() === $root.LAST_INDEX) && $root.endRender() -->last<!-- /ko -->
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koNestedClickBinding.js';
+      
+      function VM() {
+          this.LAST_INDEX = 9999;
+      
+          let _numbers = [],
+              _startTime;
+      
+          for (let i=0; i<=this.LAST_INDEX; i++) {
+              _numbers.push(i);
+          }
+      
+          this.numbersClassic = ko.observableArray();
+          this.numbersWithNestedClick = ko.observableArray();
+      
+          this._prepareRender = () => {
+              this.numbersClassic([]);
+              _startTime = Date.now();
+          }
+      
+          this.renderClassic = () => {
+              this._prepareRender();
+              this.numbersClassic(_numbers);
+          }
+      
+          this.renderWithNestedClick = () => {
+              this._prepareRender();
+              this.numbersWithNestedClick(_numbers);
+          }
+      
+          this.clickMe = (val) => alert(val);
+      
+          this.endRender = () => {
+              alert('Render finished after ' + (Date.now() - _startTime) + ' millis');
+          }
+      }
+      
+      ko.applyBindings(new VM());
+    </script>
+  </body>
+</html>
