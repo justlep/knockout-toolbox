@@ -1,0 +1,40 @@
+extends default
+
+block content
+
+    h3 Example for `when`:
+    h4 An alert will appear the <b>first</b> time num is "1"
+
+    b(data-bind="text: num")
+    div
+        button(data-bind="click: num.dec") -
+        button(data-bind="click: num.inc") +
+
+    br
+    hr
+    h3 Example for `whenever`:
+        h4 An alert will appear <b>every</b> time otherNum is "1"
+
+        b(data-bind="text: otherNum")
+        div
+            button(data-bind="click: otherNum.dec") -
+            button(data-bind="click: otherNum.inc") +
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koWhen.js';
+        import '../lib/koWhenever.js';
+
+        function VM() {
+            this.num = ko.observable(0);
+            this.num.when(1, () => alert('num is 1 (for the first time)'));
+            this.num.inc = () => this.num(this.num() + 1);
+            this.num.dec = () => this.num(this.num() - 1);
+
+            this.otherNum = ko.observable(0);
+            this.otherNum.whenever(1, () => alert('otherNum is 1'));
+            this.otherNum.inc = () => this.otherNum(this.otherNum() + 1);
+            this.otherNum.dec = () => this.otherNum(this.otherNum() - 1);
+        }
+
+        ko.applyBindings(new VM());
