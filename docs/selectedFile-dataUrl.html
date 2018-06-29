@@ -16,7 +16,7 @@
     <script src="../external/moment.js"></script>
   </head>
   <body>
-    <h2>Select a file</h2>
+    <h2>Select an image file:</h2>
     <input type="file" accept="image/*" data-bind="selectedFile: imageFile">
     <div data-bind="with: imageFile.fileDataUrl">
       <p>Preview:</p><img data-bind="attr: {src: $data}">

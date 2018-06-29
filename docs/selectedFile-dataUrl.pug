@@ -1,7 +1,7 @@
 extends .default
 
 block content
-    h2 Select a file
+    h2 Select an image file:
     input(type="file", accept="image/*", data-bind="selectedFile: imageFile")
     div(data-bind="with: imageFile.fileDataUrl")
         p Preview:
