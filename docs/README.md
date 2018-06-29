@@ -19,6 +19,7 @@
 * [scrollIntoView](scrollIntoView.html)
 * [selectedFile, dataUrl](selectedFile-dataUrl.html)
 * [subscribeOnce](subscribeOnce.html)
+* [tabs](tabs.html)
 * [trimmable](trimmable.html)
 * [when, whenever](when-whenever.html)
 

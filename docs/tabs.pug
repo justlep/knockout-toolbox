@@ -1,0 +1,42 @@
+extends .default
+
+block append head
+    style(type="text/css").
+        ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .tabs__container {}
+        .tabs__tabs {
+            display: block;
+        }
+        .tabs__tab {
+            margin-right: 4px;
+            padding: 4px 10px;
+            border-radius: 4px 4px 0 0;
+            background: #eee;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .tabs__tab--active {
+            background: #aaa;
+            font-weight: bold;
+        }
+        .tabs__panels {border: 1px solid #888}
+        .tabs__panel {padding: 0 10px}
+
+block content
+    div(style="display:none" data-bind="visible: true")
+        ko-tabs
+            ko-tab(params="label: 'Tab #1'")
+                p(style="color:red") This is the first tab's content..
+            ko-tab(params="label: 'Tab #2'")
+                p(style="color:green") And this is the second tab's content...
+
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koTabsComponent.js';
+
+        ko.applyBindings({});
