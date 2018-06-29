@@ -1,0 +1,48 @@
+extends .default
+
+block content
+    select(data-bind="foreach: optGroups, value: selectedOption")
+        option(value="") Please select..
+        optgroup(data-bind="attr: {label: label}, foreach: opts")
+            option(data-bind="text: label, option: $data")
+
+    br
+    hr
+    span(data-bind="with: selectedOption()") Selected option: &nbsp;
+        b(data-bind="text: label")
+    hr
+
+    button(data-bind="click: selectOpt23") Select Option 2.3
+    button(data-bind="click: reset") Reset
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koOptionBinding.js';
+
+        function VM() {
+            this.optGroups = [
+                {
+                    label: 'Group1',
+                    opts: [
+                        {label: 'Opt 1.1', value: 'g1-opt1'},
+                        {label: 'Opt 1.2', value: 'g1-opt2'},
+                        {label: 'Opt 1.3', value: 'g1-opt3'},
+                    ]
+                },
+                {
+                    label: 'Group2',
+                    opts: [
+                        {label: 'Opt 2.1', value: 'g2-opt1'},
+                        {label: 'Opt 2.2', value: 'g2-opt2'},
+                        {label: 'Opt 2.3', value: 'g2-opt3'}
+                    ]
+                }
+            ];
+
+            this.selectedOption = ko.observable();
+
+            this.selectOpt23 = () => this.selectedOption(this.optGroups[1].opts[2]);
+            this.reset = () => this.selectedOption(null);
+        }
+
+        ko.applyBindings(new VM());

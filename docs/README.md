@@ -13,6 +13,7 @@
 * [formatNumber](formatNumber.html)
 * [importBindings](importBindings.html)
 * [nestedClick](nestedClick.html)
+* [option](option.html)
 * [resettable](resettable.html)
 * [responsiveHelper](responsiveHelper.html)
 * [scrollIntoView](scrollIntoView.html)
