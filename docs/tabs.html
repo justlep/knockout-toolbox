@@ -50,13 +50,49 @@
         <ko-tab params="label: 'Tab #2'">
           <p style="color:green">And this is the second tab's content...</p>
         </ko-tab>
-      </ko-tabs>
+      </ko-tabs><br>
+      <!-- -------------------------------------------------------------------------->
+      <h4>Using the `preselected:true` parameter on the second tab</h4>
+      <ko-tabs>
+        <ko-tab params="label: 'Tab #1'">
+          <p style="color:red">This is the first tab's content..</p>
+        </ko-tab>
+        <ko-tab params="label: 'Tab #2', preselected: true">
+          <p style="color:green">And this is the second tab's content...</p>
+        </ko-tab>
+        <ko-tab params="label: 'Tab #3'">
+          <p style="color:magenta">And this is the third tab's content...</p>
+        </ko-tab>
+      </ko-tabs><br>
+      <!-- -------------------------------------------------------------------------->
+      <h4>Using the `keyForRestore` option, allowing to preselect the last used tab whenever the tabs component gets re-rendered</h4>
+      <p>
+        <button data-bind="click: () =&gt; secondTabsEnabled(!secondTabsEnabled())">
+          Click to toggle the tabs below (the last selected tab should be maintained upon re-rendering)
+          
+        </button>
+      </p>
+      <div data-bind="if: secondTabsEnabled">
+        <ko-tabs params="keyForRestore: 'myRestorableTabs'">
+          <ko-tab params="label: 'Tab #1'">
+            <p style="color:red">This is the first tab's content..</p>
+          </ko-tab>
+          <ko-tab params="label: 'Tab #2'">
+            <p style="color:green">And this is the second tab's content...</p>
+          </ko-tab>
+          <ko-tab params="label: 'Tab #3'">
+            <p style="color:magenta">And this is the third tab's content...</p>
+          </ko-tab>
+        </ko-tabs>
+      </div>
     </div>
     <script type="module">
       import {ko} from '../lib/libs.js';
       import '../lib/koTabsComponent.js';
       
-      ko.applyBindings({});
+      ko.applyBindings({
+          secondTabsEnabled: ko.observable(true)
+      });
     </script><a href="./" style="position: absolute; right: 10px; top: 10px;">&laquo; Back</a>
   </body>
 </html>
