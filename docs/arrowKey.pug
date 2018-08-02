@@ -1,0 +1,29 @@
+extends .default
+
+block content
+    h2 Hit some arrow keys while a textfield has focus
+
+    p: label Capturing all arrows:
+        input(type="text", data-bind="arrowKey: onArrowKey", value=".........................")
+    p: label Capturing LEFT/RIGHT arrows only:
+        input(type="text", data-bind="arrowKey: {leftRight: onArrowKey}", value=".........................")
+    p: label Capturing UP/DOWN arrows only:
+        input(type="text", data-bind="arrowKey: {upDown: onArrowKey}", value=".........................")
+
+    h4 Last pressed keys:
+    ol(data-bind="foreach: lastPressedKeys"): li(data-bind="text: $data")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koArrowKeyBinding.js';
+
+        function VM() {
+            this.lastPressedKeys = ko.observableArray();
+
+            this.onArrowKey = (arrow) => {
+                let keyName = arrow.up ? 'UP' : arrow.down ? 'DOWN' : arrow.left ? 'LEFT' : arrow.right ? 'RIGHT' : '???';
+                this.lastPressedKeys.push(keyName);
+            }
+        }
+
+        ko.applyBindings(new VM());
