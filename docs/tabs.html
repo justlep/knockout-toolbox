@@ -52,7 +52,7 @@
         </ko-tab>
       </ko-tabs><br>
       <!-- -------------------------------------------------------------------------->
-      <h4>Using the `preselected:true` parameter on the second tab</h4>
+      <h3>Using the `preselected:true` parameter on the second tab</h3>
       <ko-tabs>
         <ko-tab params="label: 'Tab #1'">
           <p style="color:red">This is the first tab's content..</p>
@@ -65,14 +65,12 @@
         </ko-tab>
       </ko-tabs><br>
       <!-- -------------------------------------------------------------------------->
-      <h4>Using the `keyForRestore` option, allowing to preselect the last used tab whenever the tabs component gets re-rendered</h4>
+      <h3>Using the `keyForRestore` option, allowing to restore the last used tab whenever the tabs component gets re-rendered</h3>
       <p>
-        <button data-bind="click: () =&gt; secondTabsEnabled(!secondTabsEnabled())">
-          Click to toggle the tabs below (the last selected tab should be maintained upon re-rendering)
-          
-        </button>
+        <button data-bind="click: () =&gt; isTabsContainerEnabled(!isTabsContainerEnabled())">Click to toggle the red container's content below</button>
+        <p>(The last selected tab will be restored upon re-rendering)</p>
       </p>
-      <div data-bind="if: secondTabsEnabled">
+      <div data-bind="if: isTabsContainerEnabled" style="padding: 30px; border: 2px solid red;">
         <ko-tabs params="keyForRestore: 'myRestorableTabs'">
           <ko-tab params="label: 'Tab #1'">
             <p style="color:red">This is the first tab's content..</p>
@@ -84,6 +82,20 @@
             <p style="color:magenta">And this is the third tab's content...</p>
           </ko-tab>
         </ko-tabs>
+        <h4>Btw.. `keyForRestore` and `preselected` can be combined:</h4>
+        <ko-tabs params="keyForRestore: 'myRestorableTabs2'">
+          <ko-tab params="label: 'Tab #1'">
+            <p style="color:red">This is the first tab's content..</p>
+          </ko-tab>
+          <ko-tab params="label: 'Tab #2'">
+            <p style="color:green">And this is the second tab's content...</p>
+          </ko-tab>
+          <ko-tab params="label: 'Tab #3', preselected: 1">
+            <p style="color:magenta">And this is the third tab's content</p>
+            <p>This tab is <b>preselected ONCE</b> when the tabs get rendered first-time.</p>
+            <p>Thereafter, whatever tab was selected last, that one will get restored whenever the tabs get destroyed & re-rendered</p>
+          </ko-tab>
+        </ko-tabs>
       </div>
     </div>
     <script type="module">
@@ -91,7 +103,7 @@
       import '../lib/koTabsComponent.js';
       
       ko.applyBindings({
-          secondTabsEnabled: ko.observable(true)
+          isTabsContainerEnabled: ko.observable(true)
       });
     </script><a href="./" style="position: absolute; right: 10px; top: 10px;">&laquo; Back</a>
   </body>
