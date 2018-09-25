@@ -52,12 +52,12 @@
         </ko-tab>
       </ko-tabs><br>
       <!-- -------------------------------------------------------------------------->
-      <h3>Using the `preselected:true` parameter on the second tab</h3>
+      <h3>Using the `isDefault:true` parameter on the second tab</h3>
       <ko-tabs>
         <ko-tab params="label: 'Tab #1'">
           <p style="color:red">This is the first tab's content..</p>
         </ko-tab>
-        <ko-tab params="label: 'Tab #2', preselected: true">
+        <ko-tab params="label: 'Tab #2', isDefault: true">
           <p style="color:green">And this is the second tab's content...</p>
         </ko-tab>
         <ko-tab params="label: 'Tab #3'">
@@ -67,8 +67,8 @@
       <!-- -------------------------------------------------------------------------->
       <h3>Using the `keyForRestore` option, allowing to restore the last used tab whenever the tabs component gets re-rendered</h3>
       <p>
-        <button data-bind="click: () =&gt; isTabsContainerEnabled(!isTabsContainerEnabled())">Click to toggle the red container's content below</button>
-        <p>(The last selected tab will be restored upon re-rendering)</p>
+        <button data-bind="click: () =&gt; isTabsContainerEnabled(!isTabsContainerEnabled())" style="border: 2px solid red">Click to toggle the red container's content below</button>
+        <p>(The tab recently selected will be restored upon re-rendering)</p>
       </p>
       <div data-bind="if: isTabsContainerEnabled" style="padding: 30px; border: 2px solid red;">
         <ko-tabs params="keyForRestore: 'myRestorableTabs'">
@@ -82,7 +82,7 @@
             <p style="color:magenta">And this is the third tab's content...</p>
           </ko-tab>
         </ko-tabs>
-        <h4>Btw.. `keyForRestore` and `preselected` can be combined:</h4>
+        <h4>Btw.. `keyForRestore` and `isDefault` can be combined:</h4>
         <ko-tabs params="keyForRestore: 'myRestorableTabs2'">
           <ko-tab params="label: 'Tab #1'">
             <p style="color:red">This is the first tab's content..</p>
@@ -90,7 +90,24 @@
           <ko-tab params="label: 'Tab #2'">
             <p style="color:green">And this is the second tab's content...</p>
           </ko-tab>
-          <ko-tab params="label: 'Tab #3', preselected: 1">
+          <ko-tab params="label: 'Tab #3', isDefault: 1">
+            <p style="color:magenta">And this is the third tab's content</p>
+            <p>This tab is <b>preselected ONCE</b> when the tabs get rendered first-time.</p>
+            <p>Thereafter, whatever tab was selected last, that one will get restored whenever the tabs get destroyed & re-rendered</p>
+          </ko-tab>
+        </ko-tabs>
+        <h3>The <b>`forceSelected`</b> attribute on a tab can be used to override the `isDefault` and last-selected mechanism</h3>
+        <p>
+          <label><input type="checkbox" data-bind="checked: forceLastTabSelected" style="display:inline"> Check to force-select the 3rd tab below whenever the tabs below get (re-)rendered</label>
+        </p>
+        <ko-tabs params="keyForRestore: 'myRestorableTabs3'">
+          <ko-tab params="label: 'Tab #1'">
+            <p style="color:red">This is the first tab's content..</p>
+          </ko-tab>
+          <ko-tab params="label: 'Tab #2', isDefault: true">
+            <p style="color:green">This is the second tab (isDefault=true)</p>
+          </ko-tab>
+          <ko-tab params="label: 'Tab #3', forceSelected: $parent.forceLastTabSelected">
             <p style="color:magenta">And this is the third tab's content</p>
             <p>This tab is <b>preselected ONCE</b> when the tabs get rendered first-time.</p>
             <p>Thereafter, whatever tab was selected last, that one will get restored whenever the tabs get destroyed & re-rendered</p>
@@ -103,7 +120,8 @@
       import '../lib/koTabsComponent.js';
       
       ko.applyBindings({
-          isTabsContainerEnabled: ko.observable(true)
+          isTabsContainerEnabled: ko.observable(true),
+          forceLastTabSelected: ko.observable(false)
       });
     </script><a href="./" style="position: absolute; right: 10px; top: 10px;">&laquo; Back</a>
   </body>

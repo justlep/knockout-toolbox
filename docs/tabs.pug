@@ -38,12 +38,12 @@ block content
 
         // ------------------------------------------------------------------------
 
-        h3 Using the `preselected:true` parameter on the second tab
+        h3 Using the `isDefault:true` parameter on the second tab
 
         ko-tabs
             ko-tab(params="label: 'Tab #1'")
                 p(style="color:red") This is the first tab's content..
-            ko-tab(params="label: 'Tab #2', preselected: true")
+            ko-tab(params="label: 'Tab #2', isDefault: true")
                 p(style="color:green") And this is the second tab's content...
             ko-tab(params="label: 'Tab #3'")
                 p(style="color:magenta") And this is the third tab's content...
@@ -54,9 +54,9 @@ block content
 
         h3 Using the `keyForRestore` option, allowing to restore the last used tab whenever the tabs component gets re-rendered
         p
-            button(data-bind="click: () => isTabsContainerEnabled(!isTabsContainerEnabled())").
+            button(data-bind="click: () => isTabsContainerEnabled(!isTabsContainerEnabled())", style="border: 2px solid red").
                 Click to toggle the red container's content below
-            p (The last selected tab will be restored upon re-rendering)
+            p (The tab recently selected will be restored upon re-rendering)
 
         div(data-bind="if: isTabsContainerEnabled", style="padding: 30px; border: 2px solid red;")
             ko-tabs(params="keyForRestore: 'myRestorableTabs'")
@@ -67,14 +67,29 @@ block content
                 ko-tab(params="label: 'Tab #3'")
                     p(style="color:magenta") And this is the third tab's content...
 
-            h4 Btw.. `keyForRestore` and `preselected` can be combined:
+            h4 Btw.. `keyForRestore` and `isDefault` can be combined:
 
             ko-tabs(params="keyForRestore: 'myRestorableTabs2'")
                 ko-tab(params="label: 'Tab #1'")
                     p(style="color:red") This is the first tab's content..
                 ko-tab(params="label: 'Tab #2'")
                     p(style="color:green") And this is the second tab's content...
-                ko-tab(params="label: 'Tab #3', preselected: 1")
+                ko-tab(params="label: 'Tab #3', isDefault: 1")
+                    p(style="color:magenta").
+                        And this is the third tab's content
+                    p This tab is <b>preselected ONCE</b> when the tabs get rendered first-time.
+                    p Thereafter, whatever tab was selected last, that one will get restored whenever the tabs get destroyed & re-rendered
+
+            h3 The <b>`forceSelected`</b> attribute on a tab can be used to override the `isDefault` and last-selected mechanism
+
+            p: label <input type="checkbox" data-bind="checked: forceLastTabSelected" style="display:inline"> Check to force-select the 3rd tab below whenever the tabs below get (re-)rendered
+
+            ko-tabs(params="keyForRestore: 'myRestorableTabs3'")
+                ko-tab(params="label: 'Tab #1'")
+                    p(style="color:red") This is the first tab's content..
+                ko-tab(params="label: 'Tab #2', isDefault: true")
+                    p(style="color:green") This is the second tab (isDefault=true)
+                ko-tab(params="label: 'Tab #3', forceSelected: $parent.forceLastTabSelected")
                     p(style="color:magenta").
                         And this is the third tab's content
                     p This tab is <b>preselected ONCE</b> when the tabs get rendered first-time.
@@ -87,5 +102,6 @@ block content
         import '../lib/koTabsComponent.js';
 
         ko.applyBindings({
-            isTabsContainerEnabled: ko.observable(true)
+            isTabsContainerEnabled: ko.observable(true),
+            forceLastTabSelected: ko.observable(false)
         });
