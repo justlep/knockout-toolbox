@@ -8,19 +8,21 @@ block append head
 
 block content
     div#vm1
-        h2 Click speed test
-            button(data-bind="click: enabled.toggle") Re-render
+        h2 Click test (see console)
+            //- button(data-bind="click: enabled.toggle") Toggle container (just for disposal tests)
 
         div(data-bind="if: enabled")
-            button(data-bind="click: startSpeedTest") Simulate some thousand clicks..
-            ul(data-bind="foreach: objectList, nestedClick: {x: onXClassClicked, '.y span': onSpanClicked, y: onYClassClicked, 'a ': onAClicked}")
-                li: a.x I am a.x
+            ul(data-bind="foreach: objectList, " +
+                         "nestedClick: {x: onXClassClicked, '.y span': onSpanClicked, y: onYClassClicked, 'a ': onAClicked}," +
+                         "nestedContextMenu: {x: onXClassCtxClicked, '.y span': onSpanCtxClicked, y: onYClassCtxClicked, 'a ': onACtxClicked}")
+                li: a.x a.x
                     b.y
-                        | I am nested b.y
-                        span(style="color: red") with nested span
-                        | and value: <!-- ko text: val --><!-- /ko -->
+                        | b.y
+                        span(style="color: red") nested span
+                        | still b.y of <!-- ko text: val --><!-- /ko -->
 
-            p: pre(data-bind="text: JSON.stringify(info(),null,2)")
+            h5 Logs:
+            ol(data-bind="foreach: logs"): li(data-bind="text: $data")
 
     h2 Speed comparison: per-element `click` binding vs. `nestedClick` on parent
     table#vm2(border=1)
@@ -46,61 +48,27 @@ block content
         import '../lib/koTogglableExtender.js';
 
         function VM1() {
-            this.TOTAL_CLICKS = 10000;
-            this.objectList = ko.observableArray();
+            this.objectList = ko.observableArray(new Array(10).fill(0).map((foo, i) => ({val: '#' + i})));
 
             this.enabled = ko.observable(true).extend({togglable: true});
 
-            this.info = ko.observable({
-                TOTAL_CLICKS: this.TOTAL_CLICKS
-            });
+            this.logs = ko.observableArray();
 
-            let _startTime,
-                _clicksRemaining,
-                _lastClickedVal;
+            this.onAClicked = (ctx) => this.logs.push('A clicked -> ' + ctx.val);
 
-            this.startSpeedTest = () => {
-                this.objectList( new Array(10).fill(0).map((foo,i) => ({val: 'huhu'+ (1+i)})) );
+            this.onYClassClicked = (ctx) => this.logs.push('.y clicked -> ' + ctx.val);
 
-                _clicksRemaining = this.TOTAL_CLICKS;
-                this.info({
-                    ...this.info(),
-                    millis: 0
-                });
-                _startTime = Date.now();
+            this.onSpanClicked = (ctx) => this.logs.push('span in .y clicked -> ' + ctx.val);
 
-                let lastElem = $('#vm1 .x:last')[0];
+            this.onXClassClicked = (ctx) => this.logs.push('.x clicked -> ' + ctx.val);
 
-                for (let i=0; i<this.TOTAL_CLICKS; i++) {
-                    if (i > 0 && _lastClickedVal !== 'huhu' + i) {
-                        throw 'handler not called synchronously';
-                    }
-                    _lastClickedVal = 'huhu' + (i+1); // make sure click-handler got actually called after previous trigger
+            this.onACtxClicked = (ctx) => this.logs.push('A CONTEXTMENU-clicked -> ' + ctx.val);
 
-                    let ev = document.createEvent('Events');
-                    ev.initEvent('click', true, false);
-                    lastElem.dispatchEvent(ev);
-                }
-            }
+            this.onYClassCtxClicked = (ctx) => this.logs.push('.y CONTEXTMENU-clicked -> ' + ctx.val);
 
-            this.onAClicked = (ctx) => console.log('A clicked -> %s', ctx.val);
+            this.onSpanCtxClicked = (ctx) => this.logs.push('span in .y CONTEXTMENU-clicked -> ' + ctx.val);
 
-            this.onYClassClicked = (ctx) => console.log('.y clicked -> %s', ctx.val);
-
-            this.onSpanClicked = (ctx) => console.log('span in .y clicked -> %s', ctx.val);
-
-            this.onXClassClicked = (ctxObj) => {
-                console.log('.x clicked -> %s', ctxObj.val);
-
-                let list = this.objectList.peek();
-
-                if (ctxObj.val === list[list.length-1].val) {
-                    this.info({
-                        ...this.info(),
-                        millis: Date.now() - _startTime
-                    });
-                }
-            }
+            this.onXClassCtxClicked = (ctx) => this.logs.push('.x CONTEXTMENU-clicked -> ' + ctx.val);
         }
 
         function VM2() {
