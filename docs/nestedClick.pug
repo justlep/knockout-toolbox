@@ -2,12 +2,28 @@ extends .default
 
 block append head
     script(src="../external/knockout-fast-foreach.min.js")
-    style(type="text/css")
+    style(type="text/css").
+        li, span, b, a {display: inline-block; padding: 2px 4px; border: 1px solid orange}
 
 
 block content
+    div#vm1
+        h2 Click speed test
+            button(data-bind="click: enabled.toggle") Re-render
 
-    table(border=1)
+        div(data-bind="if: enabled")
+            button(data-bind="click: startSpeedTest") Simulate some thousand clicks..
+            ul(data-bind="foreach: objectList, nestedClick: {x: onXClassClicked, '.y span': onSpanClicked, y: onYClassClicked, 'a ': onAClicked}")
+                li: a.x I am a.x
+                    b.y
+                        | I am nested b.y
+                        span(style="color: red") with nested span
+                        | and value: <!-- ko text: val --><!-- /ko -->
+
+            p: pre(data-bind="text: JSON.stringify(info(),null,2)")
+
+    h2 Speed comparison: per-element `click` binding vs. `nestedClick` on parent
+    table#vm2(border=1)
         thead: tr
             th: button(data-bind="click: renderClassic") Render using per-LI click binding
             th: button(data-bind="click: renderWithNestedClick") Render using renderWithNestedClick-binding on UL
@@ -27,16 +43,71 @@ block content
     script(type="module").
         import {ko} from '../lib/libs.js';
         import '../lib/koNestedClickBinding.js';
+        import '../lib/koTogglableExtender.js';
 
-        function VM() {
+        function VM1() {
+            this.TOTAL_CLICKS = 10000;
+            this.objectList = ko.observableArray();
+
+            this.enabled = ko.observable(true).extend({togglable: true});
+
+            this.info = ko.observable({
+                TOTAL_CLICKS: this.TOTAL_CLICKS
+            });
+
+            let _startTime,
+                _clicksRemaining,
+                _lastClickedVal;
+
+            this.startSpeedTest = () => {
+                this.objectList( new Array(10).fill(0).map((foo,i) => ({val: 'huhu'+ (1+i)})) );
+
+                _clicksRemaining = this.TOTAL_CLICKS;
+                this.info({
+                    ...this.info(),
+                    millis: 0
+                });
+                _startTime = Date.now();
+
+                let lastElem = $('#vm1 .x:last')[0];
+
+                for (let i=0; i<this.TOTAL_CLICKS; i++) {
+                    if (i > 0 && _lastClickedVal !== 'huhu' + i) {
+                        throw 'handler not called synchronously';
+                    }
+                    _lastClickedVal = 'huhu' + (i+1); // make sure click-handler got actually called after previous trigger
+
+                    let ev = document.createEvent('Events');
+                    ev.initEvent('click', true, false);
+                    lastElem.dispatchEvent(ev);
+                }
+            }
+
+            this.onAClicked = (ctx) => console.log('A clicked -> %s', ctx.val);
+
+            this.onYClassClicked = (ctx) => console.log('.y clicked -> %s', ctx.val);
+
+            this.onSpanClicked = (ctx) => console.log('span in .y clicked -> %s', ctx.val);
+
+            this.onXClassClicked = (ctxObj) => {
+                console.log('.x clicked -> %s', ctxObj.val);
+
+                let list = this.objectList.peek();
+
+                if (ctxObj.val === list[list.length-1].val) {
+                    this.info({
+                        ...this.info(),
+                        millis: Date.now() - _startTime
+                    });
+                }
+            }
+        }
+
+        function VM2() {
             this.LAST_INDEX = 9999;
 
-            let _numbers = [],
+            let _numbers = new Array(this.LAST_INDEX + 1).fill(0).map((foo, i) => i),
                 _startTime;
-
-            for (let i=0; i<=this.LAST_INDEX; i++) {
-                _numbers.push(i);
-            }
 
             this.numbersClassic = ko.observableArray();
             this.numbersWithNestedClick = ko.observableArray();
@@ -63,4 +134,5 @@ block content
             }
         }
 
-        ko.applyBindings(new VM());
+        ko.applyBindings(new VM1(), document.getElementById('vm1'));
+        ko.applyBindings(new VM2(), document.getElementById('vm2'));

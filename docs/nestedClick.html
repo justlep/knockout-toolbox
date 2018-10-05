@@ -15,10 +15,29 @@
     <script src="../external/knockout-3.4.2.js"></script>
     <script src="../external/moment.js"></script>
     <script src="../external/knockout-fast-foreach.min.js"></script>
-    <style type="text/css"></style>
+    <style type="text/css">
+      li, span, b, a {display: inline-block; padding: 2px 4px; border: 1px solid orange}
+      
+      
+    </style>
   </head>
   <body>
-    <table border="1">
+    <div id="vm1">
+      <h2>Click speed test
+        <button data-bind="click: enabled.toggle">Re-render</button>
+      </h2>
+      <div data-bind="if: enabled">
+        <button data-bind="click: startSpeedTest">Simulate some thousand clicks..</button>
+        <ul data-bind="foreach: objectList, nestedClick: {x: onXClassClicked, '.y span': onSpanClicked, y: onYClassClicked, 'a ': onAClicked}">
+          <li><a class="x">I am a.x<b class="y">I am nested b.y<span style="color: red">with nested span</span>and value: <!-- ko text: val --><!-- /ko --></b></a></li>
+        </ul>
+        <p>
+          <pre data-bind="text: JSON.stringify(info(),null,2)"></pre>
+        </p>
+      </div>
+    </div>
+    <h2>Speed comparison: per-element `click` binding vs. `nestedClick` on parent</h2>
+    <table id="vm2" border="1">
       <thead>
         <tr>
           <th>
@@ -51,16 +70,71 @@
     <script type="module">
       import {ko} from '../lib/libs.js';
       import '../lib/koNestedClickBinding.js';
+      import '../lib/koTogglableExtender.js';
       
-      function VM() {
+      function VM1() {
+          this.TOTAL_CLICKS = 10000;
+          this.objectList = ko.observableArray();
+      
+          this.enabled = ko.observable(true).extend({togglable: true});
+      
+          this.info = ko.observable({
+              TOTAL_CLICKS: this.TOTAL_CLICKS
+          });
+      
+          let _startTime,
+              _clicksRemaining,
+              _lastClickedVal;
+      
+          this.startSpeedTest = () => {
+              this.objectList( new Array(10).fill(0).map((foo,i) => ({val: 'huhu'+ (1+i)})) );
+      
+              _clicksRemaining = this.TOTAL_CLICKS;
+              this.info({
+                  ...this.info(),
+                  millis: 0
+              });
+              _startTime = Date.now();
+      
+              let lastElem = $('#vm1 .x:last')[0];
+      
+              for (let i=0; i<this.TOTAL_CLICKS; i++) {
+                  if (i > 0 && _lastClickedVal !== 'huhu' + i) {
+                      throw 'handler not called synchronously';
+                  }
+                  _lastClickedVal = 'huhu' + (i+1); // make sure click-handler got actually called after previous trigger
+      
+                  let ev = document.createEvent('Events');
+                  ev.initEvent('click', true, false);
+                  lastElem.dispatchEvent(ev);
+              }
+          }
+      
+          this.onAClicked = (ctx) => console.log('A clicked -> %s', ctx.val);
+      
+          this.onYClassClicked = (ctx) => console.log('.y clicked -> %s', ctx.val);
+      
+          this.onSpanClicked = (ctx) => console.log('span in .y clicked -> %s', ctx.val);
+      
+          this.onXClassClicked = (ctxObj) => {
+              console.log('.x clicked -> %s', ctxObj.val);
+      
+              let list = this.objectList.peek();
+      
+              if (ctxObj.val === list[list.length-1].val) {
+                  this.info({
+                      ...this.info(),
+                      millis: Date.now() - _startTime
+                  });
+              }
+          }
+      }
+      
+      function VM2() {
           this.LAST_INDEX = 9999;
       
-          let _numbers = [],
+          let _numbers = new Array(this.LAST_INDEX + 1).fill(0).map((foo, i) => i),
               _startTime;
-      
-          for (let i=0; i<=this.LAST_INDEX; i++) {
-              _numbers.push(i);
-          }
       
           this.numbersClassic = ko.observableArray();
           this.numbersWithNestedClick = ko.observableArray();
@@ -87,7 +161,8 @@
           }
       }
       
-      ko.applyBindings(new VM());
+      ko.applyBindings(new VM1(), document.getElementById('vm1'));
+      ko.applyBindings(new VM2(), document.getElementById('vm2'));
     </script><a href="./" style="position: absolute; right: 10px; top: 10px;">&laquo; Back</a>
   </body>
 </html>
