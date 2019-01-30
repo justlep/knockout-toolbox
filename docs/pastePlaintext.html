@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Knockout Toolbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#838B63">
+    <style type="text/css">
+      label, input {display:block}
+      div {overflow:hidden; min-height: 20px;}
+      dd {font-weight:bold}
+    </style>
+    <script src="../external/jquery-3.3.1.min.js"></script>
+    <script src="../external/knockout-3.4.2.js"></script>
+    <script src="../external/moment.js"></script>
+    <style type="text/css">
+      .fake-textarea {
+          border: 1px solid green;
+          padding: 5px;
+          min-height: 10em;
+          white-space: pre-wrap;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div>
+      <h4>Anything copy/pasted here will be text/plain:</h4>
+      <div class="fake-textarea" contenteditable data-bind="pastePlaintext:true"></div>
+      <h4>Any copy/pasted HTML here will remain styled HTML:</h4>
+      <div class="fake-textarea" contenteditable data-bind="pastPlaintext:true"></div>
+    </div>
+    <script type="module">
+      import {ko} from '../lib/libs.js';
+      import '../lib/koPastePlaintextBinding.js';
+      
+      ko.applyBindings();
+    </script><a href="./" style="position: absolute; right: 10px; top: 10px;">&laquo; Back</a>
+  </body>
+</html>

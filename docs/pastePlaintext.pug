@@ -1,0 +1,25 @@
+extends .default
+
+block head
+    style(type="text/css").
+        .fake-textarea {
+            border: 1px solid green;
+            padding: 5px;
+            min-height: 10em;
+            white-space: pre-wrap;
+        }
+
+block content
+
+    div
+        h4 Anything copy/pasted here will be text/plain:
+        div.fake-textarea(contenteditable=true, data-bind="pastePlaintext:true")
+
+        h4 Any copy/pasted HTML here will remain styled HTML:
+        div.fake-textarea(contenteditable=true, data-bind="pastPlaintext:true")
+
+    script(type="module").
+        import {ko} from '../lib/libs.js';
+        import '../lib/koPastePlaintextBinding.js';
+
+        ko.applyBindings();

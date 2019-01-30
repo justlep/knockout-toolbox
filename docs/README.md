@@ -15,6 +15,7 @@
 * [importBindings](https://justlep.github.io/knockout-toolbox/docs/importBindings.html)
 * [nestedClick](https://justlep.github.io/knockout-toolbox/docs/nestedClick.html)
 * [option](https://justlep.github.io/knockout-toolbox/docs/option.html)
+* [pastePlaintext](https://justlep.github.io/knockout-toolbox/docs/pastePlaintext.html)
 * [resettable](https://justlep.github.io/knockout-toolbox/docs/resettable.html)
 * [responsiveHelper](https://justlep.github.io/knockout-toolbox/docs/responsiveHelper.html)
 * [scrollIntoView](https://justlep.github.io/knockout-toolbox/docs/scrollIntoView.html)
