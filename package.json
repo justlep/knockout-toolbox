@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/justlep/knockout-toolbox#readme",
   "devDependencies": {
-    "eslint": "~4.16.0",
+    "eslint": "^4.18.2",
     "eslint-plugin-log-filenames": "~1.0.1",
     "http-server": "~0.11.1",
     "pug": "~2.0.3"
