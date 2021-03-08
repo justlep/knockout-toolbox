@@ -16,7 +16,8 @@
     <script src="../external/moment.js"></script>
   </head>
   <body>
-    <h2>Current window size:<b data-bind="text: winWidth"></b></h2>
+    <h2>Current window size:<b data-bind="text: w"></b></h2>
+    <h4 data-bind="text: txt400600"></h4>
     <h2>visibleIfWindowSize</h2>
     <div style="background:red" data-bind="visibleIfWindowSize: {min: 500}">min. 500</div>
     <div style="background:yellow" data-bind="visibleIfWindowSize: {max: 500}">max. 500</div>
@@ -27,10 +28,13 @@
     <div style="background:orange" data-bind="ifWindowSize: {min: 400, max: 600}">400-600</div>
     <script type="module">
       import {ko} from '../lib/libs.js';
-      import responsiveHelper from '../lib/koResponsiveHelper.js';
+      import {currentWidth, getWidthRangeObservable} from '../lib/koResponsiveHelper.js';
+      
+      const fits400600 = getWidthRangeObservable(400, 600);
       
       ko.applyBindings({
-          winWidth: responsiveHelper.currentWidthObservable
+          w: currentWidth,
+          txt400600: ko.computed(() => `Width is ${fits400600() ? '' : 'NOT' } between 400 and 600`)
       });
     </script><a href="./" style="position: absolute; right: 10px; top: 10px;">&laquo; Back</a>
   </body>

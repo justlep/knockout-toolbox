@@ -2,7 +2,9 @@ extends .default
 
 block content
     h2 Current window size:
-        b(data-bind="text: winWidth")
+        b(data-bind="text: w")
+
+    h4(data-bind="text: txt400600")
 
     h2 visibleIfWindowSize
 
@@ -18,8 +20,11 @@ block content
 
     script(type="module").
         import {ko} from '../lib/libs.js';
-        import responsiveHelper from '../lib/koResponsiveHelper.js';
+        import {currentWidth, getWidthRangeObservable} from '../lib/koResponsiveHelper.js';
+
+        const fits400600 = getWidthRangeObservable(400, 600);
 
         ko.applyBindings({
-            winWidth: responsiveHelper.currentWidthObservable
+            w: currentWidth,
+            txt400600: ko.computed(() => `Width is ${fits400600() ? '' : 'NOT' } between 400 and 600`)
         });
